@@ -15,7 +15,7 @@ var initCmd = &cobra.Command{
 		pterm.Info.Println("initializing kily configuration")
 
 		// Set the openai.com API key
-		openAIApiKey, err := pterm.DefaultInteractiveTextInput.WithMultiLine(false).Show("\nEnter your OpenAI API key")
+		openAIApiKey, err := pterm.DefaultInteractiveTextInput.WithMultiLine(false).WithMask("*").Show("\nEnter your OpenAI API key")
 		if err != nil {
 			pterm.Error.Println("error parsing OpenAI API key")
 		}
