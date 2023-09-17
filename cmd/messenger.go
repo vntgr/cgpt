@@ -42,9 +42,6 @@ var messengerCmd = &cobra.Command{
 		}
 
 		fmt.Println(data)
-
-		// pterm.Success.Printf("%d coordinate(s) found!\n", len(*coordinates))
-		// ui.PrintCoordinates(coordinates)
 	},
 }
 
