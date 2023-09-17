@@ -1,8 +1,9 @@
 package main
 
 import (
-	"git.mysticmode.net/mysticmode/kily/cmd"
 	"github.com/spf13/viper"
+
+	"git.mysticmode.net/mysticmode/kily/cmd"
 )
 
 func main() {

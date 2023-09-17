@@ -5,11 +5,15 @@ import (
 	"os"
 	"strings"
 
-	"git.mysticmode.net/mysticmode/kily/pkg/chatgpt"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"git.mysticmode.net/mysticmode/kily/pkg/chatgpt"
+	"git.mysticmode.net/mysticmode/kily/pkg/kvstore"
 )
+
+var kv kvstore.KVOps
 
 // messengerCmd represents the messenger command
 var messengerCmd = &cobra.Command{
@@ -25,14 +29,16 @@ var messengerCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		requesterData := []chatgpt.RequesterData{
+			{
+				Role:    "user",
+				Content: inputMsg,
+			},
+		}
+
 		client := chatgpt.NewChatGPTClient(openAIApiKey)
 		req := &chatgpt.ChatGPTRequest{
-			Messages: []chatgpt.RequesterData{
-				{
-					Content: inputMsg,
-					Role:    "user",
-				},
-			},
+			Messages: requesterData,
 		}
 
 		data, err := chatgpt.PostMessage(client, req)
@@ -41,10 +47,17 @@ var messengerCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println(data)
+		fmt.Println(data.Choices[0].Message.Content)
+
+		err = kv.Put([]byte(data.Choices[0].Message.Role), []byte(data.Choices[0].Message.Content))
+		if err != nil {
+			pterm.Error.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(messengerCmd)
+	kv, _ = kvstore.InitializeKVStore()
 }
