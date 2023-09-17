@@ -13,8 +13,6 @@ import (
 	"git.mysticmode.net/mysticmode/kily/pkg/kvstore"
 )
 
-var kv kvstore.KVOps
-
 // messengerCmd represents the messenger command
 var messengerCmd = &cobra.Command{
 	Use:   "messenger <message>",
@@ -48,8 +46,19 @@ var messengerCmd = &cobra.Command{
 		}
 
 		fmt.Println(data.Choices[0].Message.Content)
+		kv, err := kvstore.InitializeKVStore()
+		if err != nil {
+			pterm.Error.Println(err)
+			os.Exit(1)
+		}
 
 		err = kv.Put([]byte(data.Choices[0].Message.Role), []byte(data.Choices[0].Message.Content))
+		if err != nil {
+			pterm.Error.Println(err)
+			os.Exit(1)
+		}
+
+		err = kv.Close()
 		if err != nil {
 			pterm.Error.Println(err)
 			os.Exit(1)
@@ -59,5 +68,4 @@ var messengerCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(messengerCmd)
-	kv, _ = kvstore.InitializeKVStore()
 }

@@ -1,8 +1,6 @@
 package kvstore
 
 import (
-	"fmt"
-
 	"github.com/akrylysov/pogreb"
 )
 
@@ -13,6 +11,7 @@ type KVInstance struct {
 type KVOps interface {
 	Put(key, val []byte) error
 	Get(key []byte) (string, error)
+	Close() error
 }
 
 func InitializeKVStore() (KVOps, error) {
@@ -24,8 +23,11 @@ func InitializeKVStore() (KVOps, error) {
 	return &KVInstance{db}, nil
 }
 
+func (kv *KVInstance) Close() error {
+	return kv.DB.Close()
+}
+
 func (kv *KVInstance) Put(key, val []byte) error {
-	fmt.Println(kv.Get(key))
 	err := kv.DB.Put(key, val)
 	if err != nil {
 		return err
