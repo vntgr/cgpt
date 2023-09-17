@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/pterm/pterm"
+	"github.com/pterm/pterm/putils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -12,6 +13,7 @@ var initCmd = &cobra.Command{
 	Short: "Initialize the kily CLI configuration",
 	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
+		pterm.DefaultBigText.WithLetters(putils.LettersFromString("Kily")).Render()
 		pterm.Info.Println("initializing kily configuration")
 
 		// Set the openai.com API key

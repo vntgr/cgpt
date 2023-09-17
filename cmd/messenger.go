@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/viper"
 
 	"git.mysticmode.net/mysticmode/kily/pkg/chatgpt"
-	"git.mysticmode.net/mysticmode/kily/pkg/kvstore"
 )
 
 // messengerCmd represents the messenger command
@@ -45,24 +44,14 @@ var messengerCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println(data.Choices[0].Message.Content)
-		kv, err := kvstore.InitializeKVStore()
-		if err != nil {
-			pterm.Error.Println(err)
-			os.Exit(1)
+		fmt.Println()
+		if len(data.Choices) > 0 {
+			response := data.Choices[0].Message.Content
+			pterm.DefaultBasicText.Println(response)
+			return
 		}
 
-		err = kv.Put([]byte(data.Choices[0].Message.Role), []byte(data.Choices[0].Message.Content))
-		if err != nil {
-			pterm.Error.Println(err)
-			os.Exit(1)
-		}
-
-		err = kv.Close()
-		if err != nil {
-			pterm.Error.Println(err)
-			os.Exit(1)
-		}
+		pterm.Info.Println("no message from ChatGPT.")
 	},
 }
 

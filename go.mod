@@ -3,7 +3,6 @@ module git.mysticmode.net/mysticmode/kily
 go 1.21
 
 require (
-	github.com/akrylysov/pogreb v0.10.1
 	github.com/pterm/pterm v0.12.65
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
